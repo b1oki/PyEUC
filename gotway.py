@@ -73,18 +73,16 @@ class ReceiveNotification(object):
             self.requester = Requester(self.received, address, False)
             self.connect()
         except BTIOException as error:
-            print(f'Connect to {address} failed')
-            print(error)
+            print(f'Connect to {address} failed: {error}')
             exit(-1)
         self.wait_notification()
 
     def connect(self, *args, **kwargs):
         print('Connecting...', end=' ')
         sys.stdout.flush()
-
         self.requester.connect(True, *args, **kwargs)
         print('OK!')
 
     def wait_notification(self):
-        print('\nThis is a bit tricky. You need to make your device to send\nsome notification. I\'ll wait...')
+        print('This is a bit tricky. You need to make your device to send some notification. I will wait...')
         self.received.wait()
