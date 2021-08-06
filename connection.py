@@ -14,7 +14,7 @@ class Requester(GATTRequester):
         self.wakeup = wakeup
 
     def on_notification(self, *args, **kwargs):
-        self.adapter.parse_data(*args, **kwargs)
+        self.adapter.parse_notification_data(*args, **kwargs)
         self.wakeup.set()
 
 

@@ -7,7 +7,7 @@ class GotwayAdapter(object):
     RATIO_GW = 0.875
     WHEEL_VOLTAGE = 84
 
-    def parse_data(self, data):
+    def parse_notification_data(self, data):
         buff_idx_offset = 3
         buff = []
         buff_str = []
