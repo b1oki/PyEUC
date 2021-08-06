@@ -1,12 +1,6 @@
 #!/usr/bin/python3
-import sys
 import ctypes
 import struct
-from threading import Event
-from bluetooth.ble import GATTRequester
-from bluetooth.ble import BTIOException
-
-gotway_adapter = None
 
 
 class GotwayAdapter(object):
@@ -54,35 +48,3 @@ class GotwayAdapter(object):
                     print(f'len {buff_len} Frame B data', ' '.join(buff_str[buff_idx_offset:]))
                 else:
                     print(f'len {buff_len} Frame N data', ' '.join(buff_str[buff_idx_offset:]), 'Unknown 18:', buff_str[18 + buff_idx_offset])
-
-
-class Requester(GATTRequester):
-    def __init__(self, wakeup, *args):
-        GATTRequester.__init__(self, *args)
-        self.wakeup = wakeup
-
-    def on_notification(self, data, *args, **kwargs):
-        gotway_adapter.parse_data(data)
-        self.wakeup.set()
-
-
-class ReceiveNotification(object):
-    def __init__(self, address):
-        self.received = Event()
-        try:
-            self.requester = Requester(self.received, address, False)
-            self.connect()
-        except BTIOException as error:
-            print(f'Connect to {address} failed: {error}')
-            exit(-1)
-        self.wait_notification()
-
-    def connect(self, *args, **kwargs):
-        print('Connecting...', end=' ')
-        sys.stdout.flush()
-        self.requester.connect(True, *args, **kwargs)
-        print('OK!')
-
-    def wait_notification(self):
-        print('This is a bit tricky. You need to make your device to send some notification. I will wait...')
-        self.received.wait()
